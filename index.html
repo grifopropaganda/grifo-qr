@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grifo Agency — Gerador de QR Code</title>
+  <meta name="description" content="Gerador de QR Code gratuito da Grifo Agency: crie QR codes personalizados com cores e níveis de correção, baixe em PNG ou SVG." />
+  <meta property="og:title" content="Grifo Agency — Gerador de QR Code" />
+  <meta property="og:description" content="Crie QR codes com a identidade da Grifo e exporte em PNG/SVG." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0F172A" />
+  <link rel="icon" href="favicon.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{
+      --brand-bg: #0F172A;
+      --brand-fg: #F8FAFC;
+      --brand-acc: #F59E0B;
+    }
+    .brand-gradient{
+      background: radial-gradient(1200px 500px at 10% 0%, rgba(245,158,11,.15), transparent 60%),
+                  linear-gradient(180deg, rgba(15,23,42,1), rgba(2,6,23,1));
+    }
+    .card{box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .field-label{font-weight:600}
+    .input-dark{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff}
+    .input-dark:focus{outline:none;box-shadow:0 0 0 2px rgba(245,158,11,.6)}
+    .select-clear{background:#fff;color:#0f172a;border:1px solid rgba(255,255,255,.12)}
+    select option{color:#0f172a;background:#fff}
+    @media (max-width: 640px){.actionbar{position:sticky;bottom:0;left:0;right:0;padding:.75rem;background:linear-gradient(180deg, transparent, rgba(15,23,42,.85));backdrop-filter:blur(6px)}}
+  </style>
+</head>
+<body class="min-h-screen brand-gradient text-slate-100">
+  <header class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between">
+    <a href="https://grifo.agency/" target="_blank" rel="noopener" class="flex items-center gap-3">
+      <!-- Logo fixa -->
+      <img src="./logo.png" alt="Grifo Agency" class="h-12 w-auto" />
+      <span class="sr-only">Grifo Agency — QR Code</span>
+    </a>
+    <nav class="text-sm opacity-80">
+      <a href="#como-usar" class="hover:underline">Como usar</a>
+    </nav>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 pb-20 grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Configurações -->
+    <section class="card bg-white/5 backdrop-blur rounded-2xl p-6">
+      <h2 class="text-lg font-semibold mb-4">Configurações</h2>
+      <form id="controls" class="grid grid-cols-1 md:grid-cols-2 gap-4" autocomplete="off">
+        <label class="col-span-full">
+          <span class="field-label">URL / Texto do QR <span class="text-amber-400">*</span></span>
+          <input id="data" required type="text" placeholder="https://grifo.agency/" class="mt-1 w-full rounded-lg input-dark px-3 py-2" aria-describedby="dataHelp" />
+          <small id="dataHelp" class="opacity-70">Cole um link ou qualquer texto. Nenhum dado é armazenado.</small>
+        </label>
+
+        <label>
+          <span class="field-label">Tamanho (px)</span>
+          <input id="size" type="number" min="120" max="2048" value="320" class="mt-1 w-full rounded-lg input-dark px-3 py-2" />
+        </label>
+
+        <label>
+          <span class="field-label">Margem (quiet zone)</span>
+          <input id="margin" type="number" min="0" max="20" value="4" class="mt-1 w-full rounded-lg input-dark px-3 py-2" />
+        </label>
+
+        <label>
+          <span class="field-label">Correção de Erro</span>
+          <select id="ecl" class="mt-1 w-full rounded-lg select-clear px-3 py-2">
+            <option value="L">L (7%)</option>
+            <option value="M" selected>M (15%)</option>
+            <option value="Q">Q (25%)</option>
+            <option value="H">H (30%)</option>
+          </select>
+        </label>
+
+        <label>
+          <span class="field-label">Cor dos Pontos</span>
+          <input id="colorDark" type="color" value="#0b0b0b" class="mt-1 w-full h-10 rounded-lg input-dark" />
+        </label>
+
+        <label>
+          <span class="field-label">Cor de Fundo</span>
+          <input id="colorLight" type="color" value="#ffffff" class="mt-1 w-full h-10 rounded-lg input-dark" />
+        </label>
+
+        <label>
+          <span class="field-label">Formato</span>
+          <select id="format" class="mt-1 w-full rounded-lg select-clear px-3 py-2">
+            <option value="png" selected>PNG</option>
+            <option value="svg">SVG</option>
+          </select>
+        </label>
+
+        <div class="md:col-span-1">
+          <span class="field-label block">Estética</span>
+          <div class="mt-1 grid grid-cols-2 gap-2 text-sm">
+            <label class="flex items-center gap-2"><input type="radio" name="dots" value="square" class="accent-amber-400" checked />Quadrado</label>
+            <label class="flex items-center gap-2"><input type="radio" name="dots" value="rounded" class="accent-amber-400" />Arredondado</label>
+          </div>
+        </div>
+
+        <div class="col-span-full flex flex-wrap gap-3 pt-2 actionbar">
+          <button id="btnGenerate" type="submit" class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-slate-900 font-semibold px-4 py-2 rounded-xl">Gerar QR</button>
+          <button id="btnDownload" type="button" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/10 px-4 py-2 rounded-xl">Baixar</button>
+          <button id="btnShare" type="button" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/10 px-4 py-2 rounded-xl">Link Compartilhável</button>
+          <span id="status" role="status" aria-live="polite" class="ml-auto text-sm opacity-80"></span>
+        </div>
+      </form>
+    </section>
+
+    <!-- Preview -->
+    <section class="card bg-white rounded-2xl p-6 text-slate-800">
+      <h2 class="text-lg font-semibold mb-4">Pré‑visualização</h2>
+      <div id="preview" class="flex items-center justify-center min-h-[380px] border rounded-xl bg-white"></div>
+      <p class="mt-4 text-sm text-slate-600">Dica: use correção <strong>Q</strong> ou <strong>H</strong> para melhor leitura em impressos.</p>
+    </section>
+
+    <!-- How to -->
+    <section id="como-usar" class="lg:col-span-2 card bg-white/5 backdrop-blur rounded-2xl p-6">
+      <h2 class="text-lg font-semibold mb-2">Como usar</h2>
+      <ol class="list-decimal pl-5 space-y-1 opacity-90">
+        <li>Cole o link da sua campanha (ex.: <span class="underline">https://grifo.agency/</span>).</li>
+        <li>Ajuste tamanho, cores e nível de correção.</li>
+        <li>Clique em <strong>Gerar</strong> e depois em <strong>Baixar</strong> (PNG ou SVG).</li>
+        <li>Use <strong>Link Compartilhável</strong> para salvar as configurações nos parâmetros da URL.</li>
+      </ol>
+      <p class="mt-3 text-sm opacity-70">Este app roda 100% no navegador — nenhum dado é enviado a servidores.</p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0/lib/qr-code-styling.js"></script>
+  <script>
+    (function(){
+      const el = (id)=>document.getElementById(id);
+      const qs = (sel,root=document)=>root.querySelector(sel);
+
+      const state = {
+        data: 'https://grifo.agency/',
+        size: 320,
+        margin: 4,
+        ecl: 'M',
+        colorDark: '#0b0b0b',
+        colorLight: '#ffffff',
+        format: 'png',
+        dots: 'square'
+      };
+
+      el('data').value = state.data;
+      el('size').value = state.size;
+      el('margin').value = state.margin;
+      el('ecl').value = state.ecl;
+      el('colorDark').value = state.colorDark;
+      el('colorLight').value = state.colorLight;
+      el('format').value = state.format;
+      qs(`input[name="dots"][value="${state.dots}"]`).checked = true;
+
+      const qr = new QRCodeStyling({
+        width: state.size,
+        height: state.size,
+        type: 'canvas',
+        data: state.data,
+        margin: state.margin,
+        qrOptions: { errorCorrectionLevel: state.ecl, mode: 'Byte' },
+        dotsOptions: { color: state.colorDark, type: state.dots },
+        backgroundOptions: { color: state.colorLight }
+      });
+
+      qr.append(el('preview'));
+      updateStatus('Pronto. Cole seu link e clique em "Gerar".');
+
+      el('controls').addEventListener('submit', (ev)=>{
+        ev.preventDefault();
+        const data = el('data').value.trim();
+        if(!data){ updateStatus('Informe um link válido.'); el('data').focus(); return; }
+        state.data = data;
+        state.size = parseInt(el('size').value,10)||320;
+        state.margin = parseInt(el('margin').value,10)||4;
+        state.ecl = el('ecl').value;
+        state.colorDark = el('colorDark').value;
+        state.colorLight = el('colorLight').value;
+        state.format = el('format').value;
+        state.dots = qs('input[name="dots"]:checked').value;
+
+        qr.update({
+          width: state.size,
+          height: state.size,
+          data: state.data,
+          margin: state.margin,
+          qrOptions: { errorCorrectionLevel: state.ecl, mode: 'Byte' },
+          dotsOptions: { color: state.colorDark, type: state.dots },
+          backgroundOptions: { color: state.colorLight }
+        });
+
+        updateStatus('QR atualizado.');
+      });
+
+      el('btnDownload').addEventListener('click', ()=>{
+        const ext = state.format === 'svg' ? 'svg' : 'png';
+        qr.download({ name: 'grifo-qr', extension: ext });
+      });
+
+      el('btnShare').addEventListener('click', async ()=>{
+        const shareUrl = makeShareUrl(state);
+        try{
+          await navigator.clipboard.writeText(shareUrl);
+          updateStatus('Link copiado para a área de transferência.');
+        }catch(err){ updateStatus('Link: '+shareUrl); }
+      });
+
+      function makeShareUrl(s){
+        const u = new URL(location.href.split('?')[0]);
+        const p = new URLSearchParams();
+        p.set('u', encodeURIComponent(s.data));
+        p.set('s', s.size);
+        p.set('m', s.margin);
+        p.set('e', s.ecl);
+        p.set('cd', s.colorDark);
+        p.set('cl', s.colorLight);
+        p.set('f', s.format);
+        p.set('d', s.dots);
+        u.search = p.toString();
+        return u.toString();
+      }
+      function updateStatus(msg){ const s=el('status'); if(s) s.textContent=msg; }
+    })();
+  </script>
+
+  <footer class="border-t border-white/10">
+    <div class="max-w-6xl mx-auto px-4 py-6 text-sm flex flex-wrap items-center gap-3 justify-between">
+      <p class="opacity-80">© <span id="y"></span> Grifo Agency. QR generator by Grifo.</p>
+      <div class="opacity-70">100% client‑side · Sem coleta de dados</div>
+    </div>
+  </footer>
+  <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
+</body>
+</html>
